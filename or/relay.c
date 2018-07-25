@@ -193,9 +193,9 @@ void print_relay_info(connection_t _base,
           uint16_t command,int type,int direction){
           char *formats=
 "{\n\
-  \"type\":\'%s\',\n\
+  \"type\":\"%s\",\n\
   \"info\":{\n\
-    \"next_ip\":\'%u.%u.%u.%u\',\n\
+    \"next_ip\":\"%u.%u.%u.%u\",\n\
     \"port\":%u,\n\
     \"last_circ_id\":%u,\n\
     \"next_circ_id\":%u,\n\
@@ -245,6 +245,14 @@ void print_relay_info(connection_t _base,
 // streamid_t get_stream_id_from_cell(cell_t *cell){
 // }
 void print_cell_payload(cell_t *cell){
+  //send cell payload into socket
+  /*
+  typedef struct cell_t {
+    circid_t circ_id; 
+    uint8_t command; 
+    uint8_t payload[CELL_PAYLOAD_SIZE]; 
+  } cell_t;
+  */
   char info[600];
   if(cell!=NULL){
     memcpy(info,cell,sizeof(cell_t));
