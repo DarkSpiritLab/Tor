@@ -161,7 +161,7 @@ int sendThroughSockfile(char *buffer,int length,int type)
 { 
   /* create a socket */ 
   int sockfd = socket(AF_UNIX, SOCK_STREAM, 0);  
-    
+  
   struct sockaddr_un address;  
   address.sun_family = AF_UNIX;
   
@@ -170,16 +170,18 @@ int sendThroughSockfile(char *buffer,int length,int type)
   }else{
     strcpy(address.sun_path,"/tor_release/cell");
   }
-  
+  FILE * fd=fopen("/tmp/a","a+");
+  fprintf(fd,"+1\n");
+  fclose(fd);
   /* connect to the server */  
   int result = connect(sockfd, (struct sockaddr *)&address, sizeof(address));  
   if(result == -1)  
-  {  
-    perror("connect failed: ");  
+  {
+    close(sockfd);
     return -1;  
   }  
   /* exchange data */    
-  write(sockfd, buffer,length);  
+  write(sockfd, buffer,length);
 
   /* close the socket */  
   close(sockfd);  
@@ -196,8 +198,8 @@ void print_relay_info(connection_t _base,
   \"type\":\"%s\",\n\
   \"info\":{\n\
     \"next_ip\":\"%u.%u.%u.%u\",\n\
-    \"port\":%u,\n\
-    \"last_circ_id\":%u,\n\
+    \"last_port\":%u,\n\
+    \"prev_circ_id\":%u,\n\
     \"next_circ_id\":%u,\n\
     \"stream_id\":%u,\n\
     \"direction\":%d\n\
@@ -275,7 +277,7 @@ void print_cell_into_file(cell_t *cell,
   \"type:\"streamjoin\",\n\
   \"info\":{\n\
     \"next_ip\":\"%u.%u.%u.%u\",\n\
-    \"port\":%u,\n\
+    \"last_port\":%u,\n\
     \"next_circ_id\":%u,\n\
     \"stream_id\":%u\n  }\n\
 }\n";
